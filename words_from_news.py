@@ -1,3 +1,4 @@
+import config
 import requests
 import json
 import pandas as pd
@@ -13,7 +14,7 @@ def get_news(country):
     url = "https://newsdata2.p.rapidapi.com/news"
 
     headers = {
-	    "X-RapidAPI-Key": "3ce6b87bf8mshce4a5a6a77a9d12p1b2843jsn51183bab967d",
+	    "X-RapidAPI-Key": config.news_api_key,
 	    "X-RapidAPI-Host": "newsdata2.p.rapidapi.com"
     }
 
@@ -39,11 +40,20 @@ def wordcloud_plot(df, stop_words, country):
     word_cloud.generate(contents)
 
     # Display the word cloud
+    title = "News from " + country.upper()
     plt.rcParams["figure.figsize"] = (12, 8)
     plt.imshow(word_cloud, interpolation="bilinear")
     plt.axis("off")
-    plt.title("News from "+country.upper())
+    plt.title(title)
+    plt.savefig(f'{title}.png', dpi=150)
     plt.show()
+
+def post_telegram(country):
+    TOKEN = config.TG_TOKEN
+    chat_id = config.chat_id
+    url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto?chat_id={chat_id}"
+    files = {"photo": open(f"{country}.png", "rb")}
+    requests.post(url, files=files)
 
 countries = {"us": "english", "mx": "spanish", "de": "german"}
 
