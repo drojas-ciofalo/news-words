@@ -45,8 +45,8 @@ def wordcloud_plot(df, stop_words, country):
     plt.imshow(word_cloud, interpolation="bilinear")
     plt.axis("off")
     plt.title(title)
-    plt.savefig(f'{title}.png', dpi=150)
-    plt.show()
+    plt.savefig(f'{country}.png', dpi=150)
+    #plt.show()
 
 def post_telegram(country):
     TOKEN = config.TG_TOKEN
@@ -62,3 +62,4 @@ for k, v in countries.items():
     df = create_df(json_data)
     stop_words = set(stopwords.words(v))
     wordcloud_plot(df, stop_words, k)
+    post_telegram(k)
