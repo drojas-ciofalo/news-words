@@ -28,6 +28,7 @@ def create_df(data):
 
 def wordcloud_plot(df, stop_words, country):
     # Concatenate the text from the column 'content'
+    df = df.dropna(subset=["content"])
     contents = " ".join(df["content"])
 
     # Create the word cloud image
@@ -61,5 +62,6 @@ for k, v in countries.items():
     json_data = get_news(k)
     df = create_df(json_data)
     stop_words = set(stopwords.words(v))
+    stop_words.add('said')
     wordcloud_plot(df, stop_words, k)
     post_telegram(k)
